@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(user.getQueryAddUser());
-            System.out.println("User added successfully");
+            System.out.println("User added kontol successfully");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
