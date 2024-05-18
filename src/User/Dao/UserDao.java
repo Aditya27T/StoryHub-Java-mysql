@@ -26,8 +26,10 @@ public class UserDao implements UserInterface{
     @Override
     public void create(User user) throws Exception {
         connection = mysql.getConnection();
-        String query = "INSERT INTO users (username, password, email, role)";
-        query += " VALUES (?, ?, ?, ?)";
+        connection.setAutoCommit(false); // Disable autocommit
+
+        String query = "INSERT INTO users (username, password, email, role, timestamp)";
+        query += " VALUES (?, ?, ?, ?, NOW())";
 
         try {
             PreparedStatement ps = connection.prepareStatement(query);
@@ -35,18 +37,14 @@ public class UserDao implements UserInterface{
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getEmail());
             ps.setInt(4, user.getRole());
-            
+
             if (ps.executeUpdate() >= 1) {
                 System.out.println("User created successfully");
                 connection.commit();
-                ps.close();
-                connection.close();
             } else {
                 System.out.println("User creation failed");
                 try {
                     connection.rollback();
-                    ps.close();
-                    connection.close();
                 } catch (Exception e) {
                     throw new Exception("Error: " + e.getMessage());
                 }
@@ -54,13 +52,12 @@ public class UserDao implements UserInterface{
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
-        
     }
 
     @Override
     public void update(User user) throws Exception {
         connection = mysql.getConnection();
-        String query = "UPDATE users SET username = ?, password = ?, email = ?, role = ?";
+        String query = "UPDATE users SET username = ?, password = ?, email = ?, role = ?, timestamp = NOW()";
         query += " WHERE id = ?";
 
         try {
@@ -166,8 +163,6 @@ public class UserDao implements UserInterface{
                         .setRole(rs.getInt("role"))
                         .build();
             }
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }

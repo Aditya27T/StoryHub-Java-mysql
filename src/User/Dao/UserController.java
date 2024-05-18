@@ -6,6 +6,7 @@ package User.Dao;
 
 import User.Model.User;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,15 +17,41 @@ public class UserController {
     private static final UserDao userDao = UserDao.getInstance();
 
     public static void create(User user) throws Exception {
-        userDao.create(user);
+        if (userDao.getByUsername(user.getUsername()) != null) {
+            JOptionPane.showMessageDialog(null, "Username already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("Username already exists");
+        } else if (userDao.getByEmail(user.getEmail()) != null) {
+            JOptionPane.showMessageDialog(null, "Email already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("Email already exists");
+        } else {
+            userDao.create(user);
+        }
     }
 
     public static void update(User user) throws Exception {
-        userDao.update(user);
+        if (userDao.getById(user.getId()) == null) {
+            JOptionPane.showMessageDialog(null, "User does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("User does not exist");
+        }
+        
+        if (userDao.getByUsername(user.getUsername()) != null) {
+            JOptionPane.showMessageDialog(null, "Username already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("Username already exists");
+        } else if (userDao.getByEmail(user.getEmail()) != null) {
+            JOptionPane.showMessageDialog(null, "Email already exists", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("Email already exists");
+        } else {
+            userDao.update(user);
+        }
     }
 
     public static void delete(User user) throws Exception {
-        userDao.delete(user);
+        if (userDao.getById(user.getId()) == null) {
+            JOptionPane.showMessageDialog(null, "User does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("User does not exist");
+        } else {
+            userDao.delete(user);
+        }
     }
 
     public static List<User> getAll() throws Exception {
