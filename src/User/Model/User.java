@@ -4,6 +4,8 @@
  */
 package User.Model;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Administrator
@@ -15,10 +17,10 @@ public class User {
     private String email;
     private int role;
     // add a timestamp for the last time the user logged in
-    private int timestamp;
+    private Timestamp timestamp;
 
 
-    private User(Integer id, String username, String password, String email, Integer role, Integer timestamp) {
+    private User(Integer id, String username, String password, String email, Integer role, Timestamp timestamp) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -47,7 +49,7 @@ public class User {
         return role;
     }
 
-    public int getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
@@ -57,7 +59,7 @@ public class User {
         private String password;
         private String email;
         private int role;
-        private int timestamp;
+        private Timestamp timestamp;
 
         public Builder() {
         }
@@ -87,7 +89,7 @@ public class User {
             return this;
         }
 
-        public Builder setTimestamp(int timestamp) {
+        public Builder setTimestamp(Timestamp timestamp) {
             this.timestamp = timestamp;
             return this;
         }

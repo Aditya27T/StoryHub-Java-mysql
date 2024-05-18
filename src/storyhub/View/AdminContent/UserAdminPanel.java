@@ -4,9 +4,15 @@
  */
 package storyhub.View.AdminContent;
 
+import User.Dao.UserController;
+import User.Model.User;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 /**
  *
- * @author Administrator
+ * author Administrator
  */
 public class UserAdminPanel extends javax.swing.JPanel {
 
@@ -26,33 +32,69 @@ public class UserAdminPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(102, 102, 255));
 
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("User Admin");
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+
+            new String [] {
+                "id", "Username", "Password", "Email", "Role", "timestamp", "Edit", "Delete"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        try {
+            List<User> users = UserController.getAll();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for (User user : users) {
+                String role = user.getRole() == 1 ? "admin" : "user";
+                Timestamp timestamp = user.getTimestamp();
+                String formattedTimestamp = sdf.format(timestamp);
+                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), role, formattedTimestamp, "Edit", "Delete"});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        jTable1.setModel(model);
+
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(165, 165, 165)
-                .addComponent(jLabel1)
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(278, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

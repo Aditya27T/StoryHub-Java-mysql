@@ -135,6 +135,7 @@ public class UserDao implements UserInterface{
                         .setPassword(rs.getString("password"))
                         .setEmail(rs.getString("email"))
                         .setRole(rs.getInt("role"))
+                        .setTimestamp(rs.getTimestamp("timestamp"))
                         .build();
                 users.add(user);
             }
@@ -161,6 +162,7 @@ public class UserDao implements UserInterface{
                         .setPassword(rs.getString("password"))
                         .setEmail(rs.getString("email"))
                         .setRole(rs.getInt("role"))
+                        .setTimestamp(rs.getTimestamp("timestamp"))
                         .build();
             }
         } catch (Exception e) {
@@ -186,6 +188,7 @@ public class UserDao implements UserInterface{
                         .setPassword(rs.getString("password"))
                         .setEmail(rs.getString("email"))
                         .setRole(rs.getInt("role"))
+                        .setTimestamp(rs.getTimestamp("timestamp"))
                         .build();
             }
         } catch (Exception e) {
