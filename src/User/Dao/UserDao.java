@@ -6,11 +6,13 @@ package User.Dao;
 
 import ConnectionDB.mysql;
 import User.Model.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+import storyhub.utils.Bcrypt;
 
 /**
  *
@@ -34,7 +36,7 @@ public class UserDao implements UserInterface{
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
+            ps.setString(2, Bcrypt.hashPassword(user.getPassword()));
             ps.setString(3, user.getEmail());
             ps.setInt(4, user.getRole());
 
@@ -71,14 +73,14 @@ public class UserDao implements UserInterface{
             if (ps.executeUpdate() >= 1) {
                 System.out.println("User updated successfully");
                 connection.commit();
-                ps.close();
-                connection.close();
+
+
             } else {
                 System.out.println("User update failed");
                 try {
                     connection.rollback();
-                    ps.close();
-                    connection.close();
+    
+    
                 } catch (Exception e) {
                     throw new Exception("Error: " + e.getMessage());
                 }
@@ -100,14 +102,14 @@ public class UserDao implements UserInterface{
             if (ps.executeUpdate() >= 1) {
                 System.out.println("User deleted successfully");
                 connection.commit();
-                ps.close();
-                connection.close();
+
+
             } else {
                 System.out.println("User deletion failed");
                 try {
                     connection.rollback();
-                    ps.close();
-                    connection.close();
+    
+    
                 } catch (Exception e) {
                     throw new Exception("Error: " + e.getMessage());
                 }
@@ -136,8 +138,6 @@ public class UserDao implements UserInterface{
                         .build();
                 users.add(user);
             }
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
@@ -188,8 +188,6 @@ public class UserDao implements UserInterface{
                         .setRole(rs.getInt("role"))
                         .build();
             }
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
@@ -215,8 +213,6 @@ public class UserDao implements UserInterface{
                         .setRole(rs.getInt("role"))
                         .build();
             }
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
@@ -232,7 +228,7 @@ public class UserDao implements UserInterface{
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, Bcrypt.hashPassword(password));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new User.Builder()
@@ -245,8 +241,6 @@ public class UserDao implements UserInterface{
             } else {
                 throw new Exception("User not found");
             } 
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
@@ -254,7 +248,7 @@ public class UserDao implements UserInterface{
     }
 
     @Override
-    public Boolean getRoleById(int id) throws Exception {
+    public Boolean getRole(int id) throws Exception {
         connection = mysql.getConnection();
         String query = "SELECT role FROM users WHERE id = ?";
         Boolean role = false;
@@ -263,15 +257,39 @@ public class UserDao implements UserInterface{
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+            // if role 1 is admin, else user 0 and except that is false
             if (rs.next()) {
                 role = rs.getInt("role") == 1;
+            } else if (rs.getInt("role") == 0) {
+                role = false;
+            } else {
+                throw new Exception("Role not found");
             }
-            ps.close();
-            connection.close();
         } catch (Exception e) {
             throw new Exception("Error: " + e.getMessage());
         }
         return role;
+    }
+
+    @Override
+    public String getPassword(int id) throws Exception {
+        connection = mysql.getConnection();
+        String query = "SELECT password FROM users WHERE id = ?";
+        String password = null;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                password = rs.getString("password");
+            } else {
+                throw new Exception("Password not found");
+            }
+        } catch (Exception e) {
+            throw new Exception("Error: " + e.getMessage());
+        }
+        return password;
     }
 
     public static UserDao getInstance() {

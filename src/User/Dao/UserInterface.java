@@ -85,10 +85,18 @@ public interface UserInterface {
     public User getByUsernameAndPassword(String username, String password) throws Exception;
 
     /*
+     * Get a password by id
+     * @param id
+     * @return
+     * @throws java.lang.Exception
+     */
+    public String getPassword(int id) throws Exception;
+    
+    /*
      * Get a Role by id
      * @param id
      * @return
      * @throws java.lang.Exception
      */
-    public Boolean getRoleById(int id) throws Exception;
+    public Boolean getRole(int id) throws Exception;
 }

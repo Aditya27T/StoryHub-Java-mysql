@@ -7,6 +7,7 @@ package User.Dao;
 import User.Model.User;
 import java.util.List;
 import javax.swing.JOptionPane;
+import storyhub.utils.Bcrypt;  
 
 /**
  *
@@ -70,12 +71,22 @@ public class UserController {
         return userDao.getByEmail(email);
     }
 
-    public static Boolean getRoleById(int id) throws Exception {
-        return userDao.getRoleById(id);
+    public static Boolean getRole(User user) {
+        return user.getRole() == 1;
     }
 
     public static User getByUsernameAndPassword(String username, String password) throws Exception {
-        return userDao.getByUsernameAndPassword(username, password);
+        if (userDao.getByUsernameAndPassword(username, password) == null) {
+            JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new Exception("Invalid username or password");
+        }
+        if (userDao.getByUsernameAndPassword(username, password).getRole() == 0) {
+            JOptionPane.showMessageDialog(null, "Welcome " + username, "Success", JOptionPane.INFORMATION_MESSAGE);
+            return userDao.getByUsernameAndPassword(username, password);
+        } else {
+            JOptionPane.showMessageDialog(null, "Welcome Admin: " + username, "Success", JOptionPane.INFORMATION_MESSAGE);
+            return userDao.getByUsernameAndPassword(username, password);
+        }
     }
     
 }

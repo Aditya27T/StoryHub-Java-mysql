@@ -4,17 +4,29 @@
  */
 package storyhub.View;
 
+import storyhub.View.AdminContent.StoryAdmin;
+import storyhub.View.AdminContent.UserAdminPanel;
+
 /**
  *
  * @author Administrator
  */
 public class AdminHome extends javax.swing.JFrame {
 
+    StoryAdmin a = new StoryAdmin();
+    UserAdminPanel u = new UserAdminPanel();
+
     /**
      * Creates new form AdminHome
      */
     public AdminHome() {
         initComponents();
+        // add the story admin panel
+        this.add(a);
+        a.setVisible(true);
+        // add the user admin panel
+        this.add(u);
+        u.setVisible(false);
     }
 
     /**
@@ -26,21 +38,77 @@ public class AdminHome extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        rSButtonIconD1 = new rojerusan.RSButtonIconD();
+        rSButtonIconD2 = new rojerusan.RSButtonIconD();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(700, 439));
+
+        jPanel1.setBackground(new java.awt.Color(51, 51, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Selamat Datang Admin");
+
+        rSButtonIconD1.setText("User");
+        rSButtonIconD1.setToolTipText("");
+        rSButtonIconD1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UserButton(evt);
+            }
+        });
+
+        rSButtonIconD2.setText("Story");
+        rSButtonIconD2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StoryHandlerButton(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rSButtonIconD1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(rSButtonIconD2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel1)
+                .addGap(30, 30, 30)
+                .addComponent(rSButtonIconD1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(rSButtonIconD2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(260, Short.MAX_VALUE))
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
+
+        jLayeredPane1.setLayout(new java.awt.CardLayout());
+        getContentPane().add(jLayeredPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void UserButton(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UserButton
+        a.setVisible(false);
+        u.setVisible(true);
+    }//GEN-LAST:event_UserButton
+
+    private void StoryHandlerButton(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StoryHandlerButton
+        a.setVisible(true);
+        u.setVisible(false);
+    }//GEN-LAST:event_StoryHandlerButton
 
     /**
      * @param args the command line arguments
@@ -78,5 +146,10 @@ public class AdminHome extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JPanel jPanel1;
+    private rojerusan.RSButtonIconD rSButtonIconD1;
+    private rojerusan.RSButtonIconD rSButtonIconD2;
     // End of variables declaration//GEN-END:variables
 }

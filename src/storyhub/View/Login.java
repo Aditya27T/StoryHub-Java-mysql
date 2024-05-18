@@ -3,6 +3,7 @@ package storyhub.View;
 import javax.swing.JOptionPane;
 import User.Dao.UserController;
 import User.Model.User;
+import storyhub.utils.Bcrypt;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -176,12 +177,15 @@ public class Login extends javax.swing.JFrame {
             try {
                 User user = UserController.getByUsernameAndPassword(username, password);
                 if (user != null) {
-                    JOptionPane.showMessageDialog(this, "Login successful");
-                    Home dashboard = new Home();
-                    dashboard.setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Login failed");
+                    if (user.getRole() == 1) {
+                        AdminHome adminHome = new AdminHome();
+                        adminHome.setVisible(true);
+                        this.dispose();
+                    } else {
+                        Home userHome = new Home();
+                        userHome.setVisible(true);
+                        this.dispose();
+                    }
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
