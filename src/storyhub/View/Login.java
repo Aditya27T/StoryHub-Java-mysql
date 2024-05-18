@@ -1,7 +1,8 @@
 package storyhub.View;
 
 import javax.swing.JOptionPane;
-import controllers.UserController;
+import User.Dao.UserController;
+import User.Model.User;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -166,17 +167,25 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_rSPasswordTextPlaceHolder1ActionPerformed
 
     private void rSButtonMetro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSButtonMetro1ActionPerformed
-        // Login Button
-        UserController userController = new UserController();
+        // Login
         String username = rSMetroTextPlaceHolder1.getText();
         String password = rSPasswordTextPlaceHolder1.getText();
-        if (userController.loginHandler(username, password)) {
-            JOptionPane.showMessageDialog(null, "Login Success");
-            Home home = new Home();
-            home.setVisible(true);
-            this.dispose();
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields");
         } else {
-            JOptionPane.showMessageDialog(null, "Login Failed");
+            try {
+                User user = UserController.getByUsernameAndPassword(username, password);
+                if (user != null) {
+                    JOptionPane.showMessageDialog(this, "Login successful");
+                    Home dashboard = new Home();
+                    dashboard.setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Login failed");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            }
         }
     }//GEN-LAST:event_rSButtonMetro1ActionPerformed
 

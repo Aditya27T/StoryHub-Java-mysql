@@ -27,4 +27,7 @@ public class Bcrypt {
         }
     }
 
+    public static boolean checkPassword(String password, String hashedPassword) {
+        return hashPassword(password).equals(hashedPassword);
+    }
 }
