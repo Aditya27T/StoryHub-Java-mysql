@@ -45,7 +45,7 @@ public class AdminHome extends javax.swing.JFrame {
         jLayeredPane1 = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(700, 439));
+        setPreferredSize(new java.awt.Dimension(800, 439));
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 255));
 
@@ -89,11 +89,12 @@ public class AdminHome extends javax.swing.JFrame {
                 .addComponent(rSButtonIconD1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(rSButtonIconD2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addContainerGap(315, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
 
+        jLayeredPane1.setPreferredSize(new java.awt.Dimension(750, 500));
         jLayeredPane1.setLayout(new java.awt.CardLayout());
         getContentPane().add(jLayeredPane1, java.awt.BorderLayout.CENTER);
 

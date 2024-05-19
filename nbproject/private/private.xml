@@ -3,10 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/StoryHub/src/storyhub/View/AdminContent/UserAdminPanel.java</file>
+            <file>file:/D:/StoryHub/src/User/Dao/UserDao.java</file>
+            <file>file:/D:/StoryHub/src/storyhub/View/AdminHome.java</file>
+            <file>file:/D:/StoryHub/src/storyhub/utils/Bcrypt.java</file>
+            <file>file:/D:/StoryHub/src/User/Model/User.java</file>
+            <file>file:/D:/StoryHub/src/storyhub/View/AdminContent/StoryAdmin.java</file>
             <file>file:/D:/StoryHub/src/storyhub/View/Login.java</file>
+            <file>file:/D:/StoryHub/src/User/Dao/UserInterface.java</file>
             <file>file:/D:/StoryHub/src/storyhub/main/StoryHub.java</file>
             <file>file:/D:/StoryHub/src/storyhub/View/Register.java</file>
-            <file>file:/D:/StoryHub/src/storyhub/controllers/UserController.java</file>
+            <file>file:/D:/StoryHub/src/User/Dao/UserController.java</file>
+            <file>file:/D:/StoryHub/src/storyhub/View/Home.java</file>
         </group>
     </open-files>
 </project-private>
