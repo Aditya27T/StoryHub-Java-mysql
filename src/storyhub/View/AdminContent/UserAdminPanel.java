@@ -14,6 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Color;
 import storyhub.utils.Bcrypt;
+import javax.swing.JTable;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 
 /**
  *
@@ -27,6 +31,7 @@ public class UserAdminPanel extends javax.swing.JPanel {
     public UserAdminPanel() {
         initComponents();
         loadData();
+        scrollTableToBottom();
     }
 
     /**
@@ -44,16 +49,17 @@ public class UserAdminPanel extends javax.swing.JPanel {
         rSMaterialButtonCircle1 = new rojerusan.RSMaterialButtonCircle();
 
         setBackground(new java.awt.Color(102, 102, 255));
+        loadData();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
             },
             new String [] {
-                "id", "Username", "Password", "Email", "Role", "timestamp", "edit", "delete"
+                "id", "Username", "Password", "Email", "Role", "timestamp", "edit", "delete", "show"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -64,13 +70,27 @@ public class UserAdminPanel extends javax.swing.JPanel {
 
         jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
-            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                final java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
-                return c;
+            public void setValue(Object value) {
+                if (value instanceof String) {
+                    String str = (String) value;
+                    if (str.equals("Delete")) {
+                        setBackground(Color.RED);
+                        setForeground(Color.WHITE);
+                    } else if (str.equals("Edit")) {
+                        setBackground(Color.BLUE);
+                        setForeground(Color.WHITE);
+                    } else if (str.equals("Show")) {
+                        setBackground(Color.GREEN);
+                        setForeground(Color.WHITE);
+                    } else {
+                        setBackground(Color.WHITE);
+                        setForeground(Color.BLACK);
+                    }
+                    setText((value == null) ? "" : value.toString());
+                }
             }
         });
-
+        
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int column = jTable1.getColumnModel().getColumnIndexAtX(evt.getX());
@@ -111,11 +131,15 @@ public class UserAdminPanel extends javax.swing.JPanel {
                                     .setTimestamp(timestamp)
                                     .build();
                             deleteUser(user);
+                        } else if (str.equals("Show")) {
+                            int id = (int) jTable1.getValueAt(row, 0);
+                            ShowOneUser(id);
                         }
                     }
                 }
             }
         });
+        scrollTableToBottom();
 
         rSMetroTextPlaceHolder1.setText("Search");
         rSMetroTextPlaceHolder1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -172,8 +196,10 @@ public class UserAdminPanel extends javax.swing.JPanel {
                 String role = user.getRole() == 1 ? "admin" : "user";
                 Timestamp timestamp = user.getTimestamp();
                 String formattedTimestamp = sdf.format(timestamp);
-                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), role, formattedTimestamp, "Edit", "Delete"});
+                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), role, formattedTimestamp, "Edit", "Delete", "Show"});
             }
+            // button enter to search
+            jTable1.requestFocus();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,11 +215,45 @@ public class UserAdminPanel extends javax.swing.JPanel {
                 String role = user.getRole() == 1 ? "admin" : "user";
                 Timestamp timestamp = user.getTimestamp();
                 String formattedTimestamp = sdf.format(timestamp);
-                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), role, formattedTimestamp, "Edit", "Delete"});
+                model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), role, formattedTimestamp, "Edit", "Delete", "Show"});
             }
+            // key listener for scroll table 
+            jTable1.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    // arrow right to scroll table to right
+                    if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        scrollTableToBottom();
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    // TODO Auto-generated method stub
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                        scrollTableToBottom();
+                    }
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    // TODO Auto-generated method stub
+                    if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                        scrollTableToBottom();
+                    } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+                        scrollTableToBottom();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void scrollTableToBottom() {
+        JTable table = jTable1;
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        table.scrollRectToVisible(table.getCellRect(model.getRowCount() - 1, 0, true));
     }
 
     private void editUser(User user) {
@@ -221,6 +281,36 @@ public class UserAdminPanel extends javax.swing.JPanel {
             UserController.delete(user);
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.removeRow(jTable1.getSelectedRow());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ShowOneUser(int id) {
+        User user;
+        String username = "";
+        String email = "";
+        String password = "";
+        int role = 0;
+        String roleString = "";
+        Timestamp timestamp = null;
+        try {
+            user = UserController.getById(id);
+            username = user.getUsername();
+            email = user.getEmail();
+            password = user.getPassword();
+            role = user.getRole();
+            if (role == 1) {
+                roleString = "admin";
+            } else {
+                roleString = "user";
+            }
+            timestamp = user.getTimestamp();
+            if (user != null) {
+                JOptionPane.showMessageDialog(null, "id: " + id + "\nusername: " + username + "\nemail: " + email + "\npassword: " + password + "\nrole: " + roleString + "\ntimestamp: " + timestamp, "User", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "User does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
