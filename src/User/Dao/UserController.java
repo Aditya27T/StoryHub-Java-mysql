@@ -7,7 +7,6 @@ package User.Dao;
 import User.Model.User;
 import java.util.List;
 import javax.swing.JOptionPane;
-import storyhub.utils.Bcrypt;  
 
 /**
  *
@@ -34,14 +33,15 @@ public class UserController {
             JOptionPane.showMessageDialog(null, "User does not exist", "Error", JOptionPane.ERROR_MESSAGE);
             throw new Exception("User does not exist");
         }
-        
-        if (userDao.getByUsername(user.getUsername()) != null) {
+
+        if (userDao.getByUsername(user.getUsername()) != null && userDao.getByUsername(user.getUsername()).getId() != user.getId()) {
             JOptionPane.showMessageDialog(null, "Username already exists", "Error", JOptionPane.ERROR_MESSAGE);
             throw new Exception("Username already exists");
-        } else if (userDao.getByEmail(user.getEmail()) != null) {
+        } else if (userDao.getByEmail(user.getEmail()) != null && userDao.getByEmail(user.getEmail()).getId() != user.getId()) {
             JOptionPane.showMessageDialog(null, "Email already exists", "Error", JOptionPane.ERROR_MESSAGE);
             throw new Exception("Email already exists");
         } else {
+            JOptionPane.showMessageDialog(null, "User updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             userDao.update(user);
         }
     }
@@ -87,6 +87,10 @@ public class UserController {
             JOptionPane.showMessageDialog(null, "Welcome Admin: " + username, "Success", JOptionPane.INFORMATION_MESSAGE);
             return userDao.getByUsernameAndPassword(username, password);
         }
+    }
+
+    public static List<User> search(String search) throws Exception {
+        return userDao.search(search);
     }
     
 }

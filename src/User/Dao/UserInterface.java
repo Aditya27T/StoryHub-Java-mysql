@@ -99,4 +99,15 @@ public interface UserInterface {
      * @throws java.lang.Exception
      */
     public Boolean getRole(int id) throws Exception;
+
+    /*
+     * Search a user by username and email
+     * @param username
+     * @param email
+     * @return
+     * 
+     * @throws java.lang.Exception
+     */
+
+    public List<User> search(String search) throws Exception;
 }

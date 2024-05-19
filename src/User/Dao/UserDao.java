@@ -59,6 +59,8 @@ public class UserDao implements UserInterface{
     @Override
     public void update(User user) throws Exception {
         connection = mysql.getConnection();
+        connection.setAutoCommit(false); // Disable autocommit
+
         String query = "UPDATE users SET username = ?, password = ?, email = ?, role = ?, timestamp = NOW()";
         query += " WHERE id = ?";
 
@@ -69,18 +71,14 @@ public class UserDao implements UserInterface{
             ps.setString(3, user.getEmail());
             ps.setInt(4, user.getRole());
             ps.setInt(5, user.getId());
-            
+
             if (ps.executeUpdate() >= 1) {
                 System.out.println("User updated successfully");
                 connection.commit();
-
-
             } else {
                 System.out.println("User update failed");
                 try {
                     connection.rollback();
-    
-    
                 } catch (Exception e) {
                     throw new Exception("Error: " + e.getMessage());
                 }
@@ -293,6 +291,33 @@ public class UserDao implements UserInterface{
             throw new Exception("Error: " + e.getMessage());
         }
         return password;
+    }
+
+    @Override
+    public List<User> search(String search) throws Exception {
+        connection = mysql.getConnection();
+        String query = "SELECT * FROM users WHERE username LIKE ?";
+        List<User> users = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, "%" + search + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User.Builder()
+                        .setId(rs.getInt("id"))
+                        .setUsername(rs.getString("username"))
+                        .setPassword(rs.getString("password"))
+                        .setEmail(rs.getString("email"))
+                        .setRole(rs.getInt("role"))
+                        .setTimestamp(rs.getTimestamp("timestamp"))
+                        .build();
+                users.add(user);
+            }
+        } catch (Exception e) {
+            throw new Exception("Error: " + e.getMessage());
+        }
+        return users;
     }
 
     public static UserDao getInstance() {

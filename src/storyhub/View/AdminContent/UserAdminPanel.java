@@ -10,6 +10,11 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.Color;
+import storyhub.utils.Bcrypt;
+
 /**
  *
  * author Administrator
@@ -35,30 +40,133 @@ public class UserAdminPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        rSMetroTextPlaceHolder1 = new rojerusan.RSMetroTextPlaceHolder();
+        rSMaterialButtonCircle1 = new rojerusan.RSMaterialButtonCircle();
 
         setBackground(new java.awt.Color(102, 102, 255));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
             },
-
             new String [] {
-                "id", "Username", "Password", "Email", "Role", "timestamp", "Edit", "Delete"
+                "id", "Username", "Password", "Email", "Role", "timestamp", "edit", "delete"
             }
         ) {
-            Class<?>[] types = new Class<?> [] {
+            Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
-            public Class<?> getColumnClass(int columnIndex) {
+
+            public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
+
+        jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                final java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+                return c;
+            }
+        });
+
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int column = jTable1.getColumnModel().getColumnIndexAtX(evt.getX());
+                int row = evt.getY() / jTable1.getRowHeight();
+                if (row < jTable1.getRowCount() && row >= 0 && column < jTable1.getColumnCount() && column >= 0) {
+                    Object value = jTable1.getValueAt(row, column);
+                    if (value instanceof String) {
+                        String str = (String) value;
+                        if (str.equals("Edit")) {
+                            int id = (int) jTable1.getValueAt(row, 0);
+                            String username = (String) jTable1.getValueAt(row, 1);
+                            String password = (String) jTable1.getValueAt(row, 2);
+                            String email = (String) jTable1.getValueAt(row, 3);
+                            String role = (String) jTable1.getValueAt(row, 4);
+                            Timestamp timestamp = Timestamp.valueOf((String) jTable1.getValueAt(row, 5));
+                            User user = new User.Builder()
+                                    .setId(id)
+                                    .setUsername(username)
+                                    .setPassword(password)
+                                    .setEmail(email)
+                                    .setRole(role.equals("admin") ? 1 : 0)
+                                    .setTimestamp(timestamp)
+                                    .build();
+                            editUser(user);
+                        } else if (str.equals("Delete")) {
+                            int id = (int) jTable1.getValueAt(row, 0);
+                            String username = (String) jTable1.getValueAt(row, 1);
+                            String password = (String) jTable1.getValueAt(row, 2);
+                            String email = (String) jTable1.getValueAt(row, 3);
+                            String role = (String) jTable1.getValueAt(row, 4);
+                            Timestamp timestamp = Timestamp.valueOf((String) jTable1.getValueAt(row, 5));
+                            User user = new User.Builder()
+                                    .setId(id)
+                                    .setUsername(username)
+                                    .setPassword(password)
+                                    .setEmail(email)
+                                    .setRole(role.equals("admin") ? 1 : 0)
+                                    .setTimestamp(timestamp)
+                                    .build();
+                            deleteUser(user);
+                        }
+                    }
+                }
+            }
+        });
+
+        rSMetroTextPlaceHolder1.setText("Search");
+        rSMetroTextPlaceHolder1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        rSMetroTextPlaceHolder1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rSMetroTextPlaceHolder1ActionPerformed(evt);
+            }
+        });
+
+        rSMaterialButtonCircle1.setText("go");
+        rSMaterialButtonCircle1.setFont(new java.awt.Font("Roboto Medium", 1, 12)); // NOI18N
+        rSMaterialButtonCircle1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rSMaterialButtonCircle1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rSMetroTextPlaceHolder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rSMaterialButtonCircle1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rSMetroTextPlaceHolder1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rSMaterialButtonCircle1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void rSMetroTextPlaceHolder1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMetroTextPlaceHolder1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rSMetroTextPlaceHolder1ActionPerformed
+
+    private void rSMaterialButtonCircle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rSMaterialButtonCircle1ActionPerformed
+        // make search from textfield
+        String search = rSMetroTextPlaceHolder1.getText();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // clear table data
         try {
-            List<User> users = UserController.getAll();
+            List<User> users = UserController.search(search);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (User user : users) {
                 String role = user.getRole() == 1 ? "admin" : "user";
@@ -69,83 +177,7 @@ public class UserAdminPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // add action listener for the edit button
-
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = jTable1.rowAtPoint(evt.getPoint());
-                int col = jTable1.columnAtPoint(evt.getPoint());
-                if (col == 6) {
-                    // edit button
-                    int id = (int) jTable1.getValueAt(row, 0);
-                    String username = (String) jTable1.getValueAt(row, 1);
-                    String password = (String) jTable1.getValueAt(row, 2);
-                    String email = (String) jTable1.getValueAt(row, 3);
-                    String role = (String) jTable1.getValueAt(row, 4);
-                    String timestamp = (String) jTable1.getValueAt(row, 5);
-                    // create a new user object
-                    User user = new User.Builder()
-                            .setId(id)
-                            .setUsername(username)
-                            .setPassword(password)
-                            .setEmail(email)
-                            .setRole(role.equals("admin") ? 1 : 0)
-                            .setTimestamp(Timestamp.valueOf(timestamp))
-                            .build();
-                    // call the edit user method
-                    editUser(user);
-                } else if (col == 7) {
-                    // delete button
-                    int id = (int) jTable1.getValueAt(row, 0);
-                    String username = (String) jTable1.getValueAt(row, 1);
-                    String password = (String) jTable1.getValueAt(row, 2);
-                    String email = (String) jTable1.getValueAt(row, 3);
-                    String role = (String) jTable1.getValueAt(row, 4);
-                    String timestamp = (String) jTable1.getValueAt(row, 5);
-                    // create a new user object
-                    User user = new User.Builder()
-                            .setId(id)
-                            .setUsername(username)
-                            .setPassword(password)
-                            .setEmail(email)
-                            .setRole(role.equals("admin") ? 1 : 0)
-                            .setTimestamp(Timestamp.valueOf(timestamp))
-                            .build();
-                    // call the delete user method
-                    deleteUser(user);
-                }
-            }
-        });
-
-        jTable1.setModel(model);
-
-        jScrollPane1.setViewportView(jTable1);
-        
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap())
-        );
-
-    }// </editor-fold>//GEN-END:initComponents
+    }//GEN-LAST:event_rSMaterialButtonCircle1ActionPerformed
 
     private void loadData() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -165,9 +197,24 @@ public class UserAdminPanel extends javax.swing.JPanel {
     }
 
     private void editUser(User user) {
-        // TODO: Implement editUser method
-        // This method will be called when the edit button is clicked
-        // You can add your logic here to handle the edit operation
+        // edit using JoptionPane to input new values
+        String username = JOptionPane.showInputDialog("Enter new username", user.getUsername());
+        String email = JOptionPane.showInputDialog("Enter new email", user.getEmail());
+        String password = JOptionPane.showInputDialog("Enter new password");
+        int role = JOptionPane.showConfirmDialog(null, "Is this user an admin?", "Role", JOptionPane.YES_NO_OPTION);
+        try {
+            user = new User.Builder()
+                    .setId(user.getId())
+                    .setUsername(username)
+                    .setEmail(email)
+                    .setPassword(password == null ? user.getPassword() : Bcrypt.hashPassword(password))
+                    .setRole(role == JOptionPane.YES_OPTION ? 1 : 0)
+                    .build();
+                    UserController.update(user);            
+                    loadData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     private void deleteUser(User user) {
         try {
@@ -180,9 +227,9 @@ public class UserAdminPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-
+    private rojerusan.RSMaterialButtonCircle rSMaterialButtonCircle1;
+    private rojerusan.RSMetroTextPlaceHolder rSMetroTextPlaceHolder1;
     // End of variables declaration//GEN-END:variables
 }
