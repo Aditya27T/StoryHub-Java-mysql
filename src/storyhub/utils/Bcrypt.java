@@ -7,6 +7,7 @@ package storyhub.utils;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 /**
  *
  * @author Administrator
@@ -27,4 +28,11 @@ public class Bcrypt {
         }
     }
 
+    public static boolean checkPassword(String password, String hashedPassword) {
+        if (password.equals(hashedPassword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
