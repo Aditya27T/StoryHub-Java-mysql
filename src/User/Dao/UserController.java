@@ -8,6 +8,7 @@ import User.Model.User;
 import java.util.List;
 import javax.swing.JOptionPane;
 
+
 /**
  *
  * @author Administrator
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 public class UserController {
 
     private static final UserDao userDao = UserDao.getInstance();
+    private static int idLoginSession;
 
     public static void create(User user) throws Exception {
         if (userDao.getByUsername(user.getUsername()) != null) {
@@ -80,6 +82,8 @@ public class UserController {
             JOptionPane.showMessageDialog(null, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
             throw new Exception("Invalid username or password");
         }
+        // get id of the user that is currently logged in
+        idLoginSession = userDao.getByUsernameAndPassword(username, password).getId();
         if (userDao.getByUsernameAndPassword(username, password).getRole() == 0) {
             JOptionPane.showMessageDialog(null, "Welcome " + username, "Success", JOptionPane.INFORMATION_MESSAGE);
             return userDao.getByUsernameAndPassword(username, password);
@@ -89,8 +93,20 @@ public class UserController {
         }
     }
 
+    public static void logout() {
+        idLoginSession = 0;
+    }
+
+    public static int getIdLoginSession() {
+        return idLoginSession;
+    }
+
+    // get username from id
+    public static String getUsernameById(int id) throws Exception {
+        return userDao.getById(id).getUsername();
+    }
+
     public static List<User> search(String search) throws Exception {
         return userDao.search(search);
     }
-    
 }

@@ -188,13 +188,14 @@ public class Login extends javax.swing.JFrame {
                 } else {
                     try {
                         User user = UserController.getByUsernameAndPassword(username, password);
+                        User getId = UserController.getByUsername(username);
                         if (user != null) {
                             if (user.getRole() == 1) {
                                 AdminHome adminHome = new AdminHome();
                                 adminHome.setVisible(true);
                                 this.dispose();
                             } else {
-                                Home userHome = new Home();
+                                Tampilan userHome = new Tampilan();
                                 userHome.setVisible(true);
                                 this.dispose();
                             }
