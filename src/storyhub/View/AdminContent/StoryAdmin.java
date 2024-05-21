@@ -4,10 +4,19 @@
  */
 package storyhub.View.AdminContent;
 
-/**
- *
- * @author Administrator
- */
+import Story.Models.Story;
+import Story.Models.Story.Builder;
+import Story.Dao.StoryController;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import User.Dao.UserController;
+import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.sql.Timestamp;
+
 public class StoryAdmin extends javax.swing.JPanel {
 
     /**
@@ -15,6 +24,7 @@ public class StoryAdmin extends javax.swing.JPanel {
      */
     public StoryAdmin() {
         initComponents();
+        loadData();
     }
 
     /**
@@ -26,32 +36,230 @@ public class StoryAdmin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+
+        loadData();
 
         setPreferredSize(new java.awt.Dimension(400, 300));
 
-        jLabel1.setText("Story Panel");
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Story"));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+            },
+            new String [] {
+                "ID", "Title", "Created At", "Status","User ID", "Show", "Accept", "Reject"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.sql.Timestamp.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+        });
+
+        // Set the table to be uneditable
+        for (int i = 0; i < jTable1.getColumnCount(); i++) {
+            Class<?> columnClass = jTable1.getColumnClass(i);
+            jTable1.setDefaultEditor(columnClass, null);
+        }
+
+        jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (row % 2 == 0) {
+                    c.setBackground(Color.WHITE);
+                } else {
+                    c.setBackground(Color.LIGHT_GRAY);
+                }
+                return c;
+            }
+
+            @Override 
+            public void setValue(Object value) {
+                if(value instanceof String){
+                    setText((String) value);
+                    if (value.equals("Show")) {
+                        setForeground(Color.BLUE);
+                    } else if (value.equals("Accept")) {
+                        setForeground(Color.GREEN);
+                    } else if (value.equals("Reject")) {
+                        setForeground(Color.RED);
+                    }
+                } else if(value instanceof Integer){
+                    setText(Integer.toString((Integer) value));
+                } else if(value instanceof java.sql.Timestamp){
+                    setText(((java.sql.Timestamp) value).toString());
+                } else {
+                    super.setValue(value);
+                }
+            }
+
+        });
+
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int column = jTable1.getColumnModel().getColumnIndexAtX(evt.getX());
+                int row = evt.getY() / jTable1.getRowHeight();
+                if (row < jTable1.getRowCount() && row >= 0 && column < jTable1.getColumnCount() && column >= 0) {
+                    Object value = jTable1.getValueAt(row, column);
+                    if (value instanceof String) {
+                        String button = (String) value;
+                        if (button.equals("Show")) {
+                            int id = (int) jTable1.getValueAt(row, 0);
+                            getById(id);
+                        } else if (button.equals("Accept")) {
+                            AcceptStory((int) jTable1.getValueAt(row, 0));
+                        } else if (button.equals("Reject")) {
+                            RejectStory((int) jTable1.getValueAt(row, 0));
+                        }
+                    }
+                }
+            }
+        });
+
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail"));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(157, 157, 157)
-                .addComponent(jLabel1)
-                .addContainerGap(184, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void loadData() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        try {
+            List<Story> stories = StoryController.getAll();
+            // if status 1 is accepted, 0 is rejected, 2 is pending
+            if (stories.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No stories found");
+            } else {
+                for (Story story : stories) {
+                    String status = story.getStatus() == 0 ? "Pending" : story.getStatus() == 1 ? "Accepted" : "Rejected";
+                    model.addRow(new Object[]{story.getId(), story.getTitle(), story.getCreated_at(), status, story.getUser_id(), "Show", "Accept", "Reject"});
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+    private void getById(int id) {
+        Story story;
+        String title;
+        String description;
+        Timestamp create_at;
+        String comment;
+        try {
+            story = StoryController.getStoryById(id);
+            title = story.getTitle();
+            description = story.getDescription();
+            create_at = story.getCreated_at();
+            comment = story.getComment();
+            jTextArea1.setText("Title: " + title + "\nDescription: " + description + "\nCreated At: " + create_at + "\nComment: " + comment);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+    private void AcceptStory(int id) {
+        Story story;
+        try {
+            story = StoryController.getStoryById(id);
+            if (story.getStatus() == 1) {
+                JOptionPane.showMessageDialog(null, "Story already accepted");
+            } else {
+                StoryController.updateStatus(id, 1);
+                story = new Builder()
+                    .setId(id)
+                    .setStatus(1)
+                    .setTitle(story.getTitle())
+                    .setDescription(story.getDescription())
+                    .setUser_id(story.getUser_id())
+                    .setCreated_at(story.getCreated_at())
+                    .setComment(story.getComment())
+                    .setComment("Accepted")
+                    .setPosted_at(new Timestamp(System.currentTimeMillis()))
+                    .build();
+                StoryController.update(story);
+                JOptionPane.showMessageDialog(null, "Story accepted successfully");
+                loadData();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+    private void RejectStory(int id) {
+        Story story;
+        try {
+            story = StoryController.getStoryById(id);
+            if (story.getStatus() == 2) {
+                JOptionPane.showMessageDialog(null, "Story already rejected");
+            } else if (story.getStatus() == 1) {
+                JOptionPane.showMessageDialog(null, "Story already accepted");
+            }
+            else {
+                StoryController.updateStatus(id, 2);
+                String comment = JOptionPane.showInputDialog("Enter the comment");
+                story = new Builder()
+                    .setId(id)
+                    .setStatus(2)
+                    .setTitle(story.getTitle())
+                    .setDescription(story.getDescription())
+                    .setUser_id(story.getUser_id())
+                    .setCreated_at(story.getCreated_at())
+                    .setComment(comment)
+                    .build();
+                StoryController.update(story);
+                JOptionPane.showMessageDialog(null, "Story rejected successfully");
+                loadData();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }
