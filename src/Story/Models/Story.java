@@ -33,10 +33,11 @@ public class Story {
         this.user_id = user_id;
     }
 
-    public Story(String title, String description,int user_id, String username) {
+    public Story(String title, String description,int user_id, String username, Timestamp posted_at) {
         this.title = title;
         this.description = description;
         this.user_id = user_id;
+        this.posted_at = posted_at;
         this.username = username;
     }
 

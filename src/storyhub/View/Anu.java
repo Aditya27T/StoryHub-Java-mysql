@@ -14,16 +14,19 @@ import javax.swing.JOptionPane;
 
 public class Anu extends JFrame {
 
+
     private JTextArea outputField;
     private JTable table;
     private JButton BackButton;
 
     public Anu() {
-        setTitle("Simple GUI");
+        setTitle("My Post");
 
         setSize(700, 600);
 
         setLayout(null);
+
+        setWindowColor(Color.BLUE);
 
         outputField = new JTextArea();
         outputField.setEditable(false); 
@@ -64,10 +67,19 @@ public class Anu extends JFrame {
                 return types[columnIndex];
             }
         });
+        
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (Story s : stories) {
-            model.addRow(new Object[]{s.getId(), s.getTitle(), s.getCreated_at(), s.getPosted_at(), s.getStatus(), s.getComment(), "Show", "Edit", "Delete"});
+            String status = "";
+            if (s.getStatus() == 0) {
+                status = "PENDING";
+            } else if (s.getStatus() == 1) {
+                status = "APPROVED";
+            } else if (s.getStatus() == 2) {
+                status = "REJECTED";
+            }
+            model.addRow(new Object[]{s.getId(), s.getTitle(), s.getCreated_at(), s.getPosted_at(), status, s.getComment(), "Show", "Edit", "Delete"});
         }
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -90,7 +102,6 @@ public class Anu extends JFrame {
                     int id = (int) table.getValueAt(row, 0);
                     Story story = StoryController.getById(id);
                     outputField.setText(story.getTitle() + "\n" + story.getDescription() + "\n" + story.getPosted_at() + "\n" + story.getComment());
-                    // if comment is empty, show "No comment"
                     if (story.getComment().equals("")) {
                         outputField.append("\nNo comment");
                     }
@@ -108,7 +119,6 @@ public class Anu extends JFrame {
                     editStory(story);
                     refreshTable(); 
                 } else if (row >= 0 && col == 8) {
-                    // Delete the story
                     int id = (int) table.getValueAt(row, 0);
                     Story story = StoryController.getById(id);
                     StoryController.delete(story);
@@ -142,7 +152,6 @@ public class Anu extends JFrame {
         table.setGridColor(Color.GRAY);
         table.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
-        // Set color for Edit, Delete, and Show columns
         table.getColumnModel().getColumn(6).setCellRenderer(new CustomTableCellRenderer(Color.GREEN));
         table.getColumnModel().getColumn(7).setCellRenderer(new CustomTableCellRenderer(Color.YELLOW));
         table.getColumnModel().getColumn(8).setCellRenderer(new CustomTableCellRenderer(Color.RED));
@@ -165,7 +174,12 @@ public class Anu extends JFrame {
             } else if (s.getStatus() == 2) {
                 status = "REJECTED";
             }
-            model.addRow(new Object[]{s.getId(), s.getTitle(), Timestamp.valueOf(s.getCreated_at().toString()), Timestamp.valueOf(s.getPosted_at().toString()), status, s.getComment(), "Show", "Edit", "Delete"});
+        
+            if (s.getPosted_at () == null && s.getCreated_at() != null) {
+                model.addRow(new Object[]{s.getId(), s.getTitle(), s.getCreated_at(), "Not posted yet", status, s.getComment(), "Show", "Edit", "Delete"});
+            } else {
+                model.addRow(new Object[]{s.getId(), s.getTitle(), s.getCreated_at(), s.getPosted_at(), status, s.getComment(), "Show", "Edit", "Delete"});
+            }
         }
     }
 
@@ -216,5 +230,9 @@ public class Anu extends JFrame {
             cell.setBackground(color);
             return cell;
         }
+    }
+    
+    private void setWindowColor(Color color) {
+        getContentPane().setBackground(color = new Color(51,51,255));
     }
 }

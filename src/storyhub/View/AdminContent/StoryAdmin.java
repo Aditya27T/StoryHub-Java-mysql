@@ -15,6 +15,8 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import java.sql.Time;
 import java.sql.Timestamp;
 
 public class StoryAdmin extends javax.swing.JPanel {
@@ -201,6 +203,7 @@ public class StoryAdmin extends javax.swing.JPanel {
             if (story.getStatus() == 1) {
                 JOptionPane.showMessageDialog(null, "Story already accepted");
             } else {
+                Timestamp posted_at = new Timestamp(System.currentTimeMillis());
                 StoryController.updateStatus(id, 1);
                 story = new Builder()
                     .setId(id)
@@ -211,7 +214,7 @@ public class StoryAdmin extends javax.swing.JPanel {
                     .setCreated_at(story.getCreated_at())
                     .setComment(story.getComment())
                     .setComment("Accepted")
-                    .setPosted_at(new Timestamp(System.currentTimeMillis()))
+                    .setPosted_at(posted_at)
                     .build();
                 StoryController.update(story);
                 JOptionPane.showMessageDialog(null, "Story accepted successfully");
