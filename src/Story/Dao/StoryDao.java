@@ -208,7 +208,7 @@ public class StoryDao implements StoryInterface {
     @Override
     public List<Story> getAllPosted() throws Exception {
         List<Story> stories = new ArrayList<>();
-        String query = "SELECT s.title, s.description, s.user_id, u.username FROM stories s INNER JOIN users u ON s.user_id = u.id WHERE s.status = 1";
+        String query = "SELECT s.title, s.description, s.user_id, s.posted_at, u.username FROM stories s INNER JOIN users u ON s.user_id = u.id WHERE s.status = 1";
         preparedStatement = connection.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -216,7 +216,8 @@ public class StoryDao implements StoryInterface {
                     resultSet.getString("title"),
                     resultSet.getString("description"),
                     resultSet.getInt("user_id"),
-                    resultSet.getString("username")
+                    resultSet.getString("username"),
+                    resultSet.getTimestamp("posted_at")
             );
             stories.add(story);
         }

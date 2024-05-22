@@ -27,6 +27,8 @@ public class Tampilan extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(720, 720);
 
+        setWindowColor(Color.BLUE);
+
         // Create a panel to hold the input components
         JPanel inputPanel = new JPanel(new FlowLayout());
         searchField = new JTextField("Search..", 20);
@@ -48,7 +50,7 @@ public class Tampilan extends JFrame {
 
         outputField = new JTextArea();
         outputField.setEditable(false);
-        outputField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        outputField.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         outputField.setLineWrap(true);
         outputField.setWrapStyleWord(true);
 
@@ -114,12 +116,14 @@ public class Tampilan extends JFrame {
                         System.out.println(ex.getMessage());
                     }
                     if (story.getPosted_at() != null) {
-                        output.append("Posted at: ").append(Timestamp.valueOf(story.getPosted_at().toString())).append("\n");
+                        output.append("Posted at: ").append(Timestamp.valueOf(story.getPosted_at().toString()))
+                                .append("\n---------------------------------------------\n");
                     } else {
-                        output.append("Posted at: ").append("Not posted yet").append("\n --------------------------------\n");
+                        output.append("Posted at: ").append("Not posted yet")
+                                .append("\n --------------------------------\n");
                     }
                 }
-            
+
                 outputField.setText(output.toString());
                 outputField.setCaretPosition(outputField.getDocument().getLength());
             } catch (Exception ex) {
@@ -177,20 +181,20 @@ public class Tampilan extends JFrame {
 
     private void customizeComponents() {
         outputField.setFont(new Font("Arial", Font.PLAIN, 14));
-        outputField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        outputField.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
         postArea.setFont(new Font("Arial", Font.PLAIN, 14));
-        postArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        postArea.setBorder(BorderFactory.createLineBorder(Color.BLUE));
     }
 
     public void refreshOutput() {
         List<Story> stories = StoryController.getAllPosted();
-
         StringBuilder output = new StringBuilder();
-
+    
         for (Story story : stories) {
             output.append(story.getTitle()).append("\n");
             output.append(story.getDescription()).append("\n");
+            output.append("Status: ");
             try {
                 output.append("Posted by: ").append(UserController.getById(story.getUser_id()).getUsername())
                         .append("\n");
@@ -198,19 +202,25 @@ public class Tampilan extends JFrame {
                 System.out.println(ex.getMessage());
             }
             if (story.getPosted_at() != null) {
-                output.append("Posted at: ").append(Timestamp.valueOf(story.getPosted_at().toString())).append("\n");
+                Timestamp postedAt = Timestamp.valueOf(story.getPosted_at().toString());
+                output.append("Posted at: ").append(postedAt).append("\n---------------------------------------------\n");
             } else {
                 output.append("Posted at: ").append("Not posted yet").append("\n--------------------------------\n");
             }
         }
-
+    
         outputField.setText(output.toString());
         outputField.setCaretPosition(outputField.getDocument().getLength());
+    }
+
+    private void setWindowColor(Color color) {
+        getContentPane().setBackground(color = new Color(51, 51, 255));
     }
 
     public static void main(String[] args) {
         Tampilan tampilan = new Tampilan();
         tampilan.setVisible(true);
         tampilan.refreshOutput();
+
     }
 }
